@@ -1,16 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
-const { handleNotFoundError } = require('./errors/errors');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
+
+mongoose.connect(MONGO_URL);
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use((req, res, next) => {
   req.user = {
@@ -22,8 +21,8 @@ app.use((req, res, next) => {
 
 app.use(userRouter);
 app.use(cardRouter);
-app.use('*', (req, res) => handleNotFoundError(res, 'Запрошен несуществующий роут.'));
-
-mongoose.connect('mongodb://localhost:27017/mestodb');
+app.use('*', (req, res) => {
+  res.status(404).send({ message: 'Запрашиваемый ресурс не найден.' });
+});
 
 app.listen(PORT);
