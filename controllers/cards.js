@@ -4,15 +4,9 @@ const { BAD_REQUEST_ERROR, NOT_FOUND_ERROR, DEFAULT_ERROR } = require('../errors
 
 const getCards = (req, res) => {
   Card.find({})
-    .orFail(() => {
-      throw new Error('NotFound');
-    })
     .then((cards) => res.send(cards))
-    .catch((err) => {
-      if (err.message === 'NotFound') {
-        return res.status(NOT_FOUND_ERROR).send({ message: 'Карточки не найдены.' });
-      }
-      return res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка', err });
+    .catch(() => {
+      res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
@@ -24,9 +18,9 @@ const createCard = (req, res) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return res.status(BAD_REQUEST_ERROR).send({ message: 'Ошибка валидации.', err });
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'Ошибка валидации.' });
       }
-      return res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка', err });
+      return res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
@@ -48,9 +42,9 @@ const deleteCard = (req, res) => {
         return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена.' });
       }
       if (err instanceof mongoose.Error.CastError) {
-        return res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректный _id карточки.', err });
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректный _id карточки.' });
       }
-      return res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка', err });
+      return res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
@@ -69,9 +63,9 @@ const addLike = (req, res) => {
         return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена.' });
       }
       if (err instanceof mongoose.Error.CastError) {
-        return res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректный _id карточки.', err });
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректный _id карточки.' });
       }
-      return res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка', err });
+      return res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
@@ -90,9 +84,9 @@ const deleteLike = (req, res) => {
         return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена.' });
       }
       if (err instanceof mongoose.Error.CastError) {
-        return res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректный _id карточки.', err });
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректный _id карточки.' });
       }
-      return res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка', err });
+      return res.status(DEFAULT_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
