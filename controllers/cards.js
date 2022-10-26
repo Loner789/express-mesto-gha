@@ -23,13 +23,13 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
+  Card.findById(req.params._id)
     .orFail(() => {
       throw new NotFoundError('Карточка с указанным _id не найдена.');
     })
     .then((card) => {
       if (card.owner._id.toString() === req.user._id) {
-        Card.findByIdAndRemove(req.params.cardId)
+        Card.findByIdAndRemove(req.params._id)
           .then((element) => res.send(element));
       } else {
         throw new ForbiddenError('Недостаточно прав для удаления карточки.');
@@ -43,7 +43,7 @@ const deleteCard = (req, res, next) => {
 
 const addLike = (req, res, next) => {
   Card.findByIdAndUpdate(
-    req.params.cardId,
+    req.params._id,
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
@@ -59,7 +59,7 @@ const addLike = (req, res, next) => {
 
 const deleteLike = (req, res, next) => {
   Card.findByIdAndUpdate(
-    req.params.cardId,
+    req.params._id,
     { $pull: { likes: req.user._id } },
     { new: true },
   )
