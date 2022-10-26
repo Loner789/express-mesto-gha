@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
+// const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const { auth } = require('./middlewares/auth');
@@ -17,11 +17,11 @@ mongoose.connect(MONGO_URL);
 
 const app = express();
 
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+// const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 
 app.use(express.json());
 app.use(helmet());
-app.use(limiter);
+// app.use(limiter);
 app.use(cookieParser());
 
 app.post('/signin', loginValidation, login);
