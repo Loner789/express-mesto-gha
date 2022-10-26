@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
 const { isURL, isEmail } = require('validator');
+const AuthError = require('../errors/AuthError');
 
 const { Schema } = mongoose;
 
@@ -42,5 +43,20 @@ const userSchema = new Schema({
 }, {
   versionKey: false,
 });
+
+// eslint-disable-next-line func-names
+userSchema.statics.findUserByCredentials = function (email, password) {
+  return this.findOne({ email }).select('+password')
+    .then((user) => {
+      if (!user) throw new AuthError('Передан неверный логин или пароль.');
+
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) throw new AuthError('Передан неверный логин или пароль.');
+
+          return user;
+        });
+    });
+};
 
 module.exports = mongoose.model('user', userSchema);

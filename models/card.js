@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const { isURL } = require('validator');
 
 const { Schema } = mongoose;
