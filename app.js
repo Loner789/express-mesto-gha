@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const { auth } = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
+const { loginValidation, userValidation } = require('./middlewares/validation');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const NotFoundError = require('./errors/NotFoundError');
@@ -23,8 +24,8 @@ app.use(helmet());
 app.use(limiter);
 app.use(cookieParser());
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', loginValidation, login);
+app.post('/signup', userValidation, createUser);
 
 app.use(auth);
 app.use(userRouter);
