@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routes = require('./routes');
 const centralizedErrorHandler = require('./middlewares/centralizedErrorHandler');
 
@@ -19,7 +20,9 @@ app.use(express.json());
 app.use(helmet());
 app.use(limiter);
 app.use(cookieParser());
+app.use(requestLogger);
 app.use(routes);
+app.use(errorLogger);
 app.use(errors());
 app.use(centralizedErrorHandler);
 
